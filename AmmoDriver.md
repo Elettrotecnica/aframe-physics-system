@@ -17,7 +17,7 @@
 
 ## Considerations Before Use
 
-The Ammo.js driver provides many features and new functionality that the existing Cannon.js integration lacks. However, there are several things to keep in mind before using the Ammo.js driver:
+The Ammo.js driver provides many features and new functionalities. However, there are several things to keep in mind before using the Ammo.js driver:
 
 - The Ammo.js binaries are not a dependency of `Aframe-Physics-System`. You will need to include this into your project yourself. See: [Including the Ammo.js Build](#including-the-ammojs-build).
 - The Ammo.js binaries are several times larger than the Cannon.js binary. This shouldn't matter for most usages unless working in very memory sensitive environments.
@@ -25,7 +25,7 @@ The Ammo.js driver provides many features and new functionality that the existin
 
 ## Installation
 
-Initial installation is the same as for Cannon.js. See: [Scripts](README.md#installation), then see [Including the Ammo.js Build](#including-the-ammojs-build).
+See: [Scripts](README.md#installation), then see [Including the Ammo.js Build](#including-the-ammojs-build).
 
 ### Including the Ammo.js build
 

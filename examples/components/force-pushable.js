@@ -12,43 +12,20 @@ AFRAME.registerComponent('force-pushable', {
   },
   init: function () {
 
-    if (this.el.sceneEl.getAttribute('physics').driver === "ammo") {
-      this.driver = "ammo"
-    }
-    else {
-      this.driver = "cannon"
-    }
+    this.driver = "ammo";
 
     this.pStart = new THREE.Vector3();
     this.sourceEl = this.el.sceneEl.querySelector('[camera]');
 
-    if (this.driver === "cannon") {
-      this.el.addEventListener('click', this.forcePushCannon.bind(this));
-    }
-    else {
-      this.el.addEventListener('click', this.forcePushAmmo.bind(this));
+    this.el.addEventListener('click', this.forcePushAmmo.bind(this));
 
-      this.force = new THREE.Vector3();
-      this.pos = new THREE.Vector3();
+    this.force = new THREE.Vector3();
+    this.pos = new THREE.Vector3();
 
-      this.el.addEventListener("body-loaded", e => {
-        this.impulseBtVector = new Ammo.btVector3();
-        this.posBtVector = new Ammo.btVector3();
-      });
-    }
-  },
-
-  forcePushCannon: function () {
-    var force,
-        el = this.el,
-        pStart = this.pStart.copy(this.sourceEl.getAttribute('position'));
-
-    // Compute direction of force, normalize, then scale.
-    force = el.body.position.vsub(pStart);
-    force.normalize();
-    force.scale(this.data.force, force);
-
-    el.body.applyImpulse(force, el.body.position);
+    this.el.addEventListener("body-loaded", e => {
+      this.impulseBtVector = new Ammo.btVector3();
+      this.posBtVector = new Ammo.btVector3();
+    });
   },
 
   forcePushAmmo: function (e) {
@@ -63,8 +40,8 @@ AFRAME.registerComponent('force-pushable', {
     force.copy(el.object3D.position.sub(pusher.position))
     force.normalize();
 
-    // not sure about units, but force seems much stronger with Ammo than Cannon, so scaling down
-    // by a factor of 10.
+    // not sure about units, but force seems much stronger with Ammo,
+    // so scaling down by a factor of 10.
     force.multiplyScalar(this.data.force / 10);
     impulseBt.setValue(force.x, force.y, force.z)
 

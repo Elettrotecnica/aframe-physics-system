@@ -56,21 +56,7 @@ AFRAME.registerComponent('rain-of-entities', {
   },
 
   recycleBox(box) {
-
-    if (box.body.position) {
-      this.recycleBoxCannon(box) 
-    }
-    else {
-      this.recycleBoxAmmo(box) 
-    }
-  },
-
-  recycleBoxCannon(box) {
-    box.body.position.copy(this.randomPosition());
-    box.body.quaternion.set(0, 0, 0, 1);
-    box.body.velocity.set(0, 0, 0);
-    box.body.angularVelocity.set(0, 0, 0);
-    box.body.updateProperties();
+    this.recycleBoxAmmo(box);
   },
 
   recycleBoxAmmo(box) {
