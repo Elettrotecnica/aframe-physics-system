@@ -1,14 +1,10 @@
 /* global THREE */
-var CANNON = require('cannon-es'),
-    CONSTANTS = require('./constants'),
+var CONSTANTS = require('./constants'),
     C_GRAV = CONSTANTS.GRAVITY,
     C_MAT = CONSTANTS.CONTACT_MATERIAL;
 
 const { TYPE } = require('./constants');
-var LocalDriver = require('./drivers/local-driver'),
-    WorkerDriver = require('./drivers/worker-driver'),
-    NetworkDriver = require('./drivers/network-driver'),
-    AmmoDriver = require('./drivers/ammo-driver');
+var AmmoDriver = require('./drivers/ammo-driver');
 require('aframe-stats-panel')
 
 /**
@@ -16,14 +12,8 @@ require('aframe-stats-panel')
  */
 module.exports = AFRAME.registerSystem('physics', {
   schema: {
-    // CANNON.js driver type
-    driver:                         { default: 'local', oneOf: ['local', 'worker', 'network', 'ammo'] },
+    driver:                         { default: 'ammo', oneOf: ['ammo'] },
     networkUrl:                     { default: '', if: {driver: 'network'} },
-    workerFps:                      { default: 60, if: {driver: 'worker'} },
-    workerInterpolate:              { default: true, if: {driver: 'worker'} },
-    workerInterpBufferSize:         { default: 2, if: {driver: 'worker'} },
-    workerEngine:                   { default: 'cannon', if: {driver: 'worker'}, oneOf: ['cannon'] },
-    workerDebug:                    { default: false, if: {driver: 'worker'} },
 
     gravity:                        { default: C_GRAV },
     iterations:                     { default: CONSTANTS.ITERATIONS },
@@ -64,70 +54,16 @@ module.exports = AFRAME.registerSystem('physics', {
     this.callbacks = {beforeStep: [], step: [], afterStep: []};
 
     this.listeners = {};
-    
 
-    this.driver = null;
-    switch (data.driver) {
-      case 'local':
-        this.driver = new LocalDriver();
-        break;
+    this.driver = new AmmoDriver();
 
-      case 'ammo':
-        this.driver = new AmmoDriver();
-        break;
-
-      case 'network':
-        this.driver = new NetworkDriver(data.networkUrl);
-        break;
-
-      case 'worker':
-        this.driver = new WorkerDriver({
-          fps: data.workerFps,
-          engine: data.workerEngine,
-          interpolate: data.workerInterpolate,
-          interpolationBufferSize: data.workerInterpBufferSize,
-          debug: data.workerDebug
-        });
-        break;
-
-      default:
-        throw new Error('[physics] Driver not recognized: "%s".', data.driver);
-    }
-
-    if (data.driver !== 'ammo') {
-      await this.driver.init({
-        quatNormalizeSkip: 0,
-        quatNormalizeFast: false,
-        solverIterations: data.iterations,
-        gravity: data.gravity,
-      });
-      this.driver.addMaterial({name: 'defaultMaterial'});
-      this.driver.addMaterial({name: 'staticMaterial'});
-      this.driver.addContactMaterial('defaultMaterial', 'defaultMaterial', {
-        friction: data.friction,
-        restitution: data.restitution,
-        contactEquationStiffness: data.contactEquationStiffness,
-        contactEquationRelaxation: data.contactEquationRelaxation,
-        frictionEquationStiffness: data.frictionEquationStiffness,
-        frictionEquationRegularization: data.frictionEquationRegularization
-      });
-      this.driver.addContactMaterial('staticMaterial', 'defaultMaterial', {
-        friction: 1.0,
-        restitution: 0.0,
-        contactEquationStiffness: data.contactEquationStiffness,
-        contactEquationRelaxation: data.contactEquationRelaxation,
-        frictionEquationStiffness: data.frictionEquationStiffness,
-        frictionEquationRegularization: data.frictionEquationRegularization
-      });
-    } else {
-      await this.driver.init({
+    await this.driver.init({
       gravity: data.gravity,
       debugDrawMode: data.debugDrawMode,
       solverIterations: data.iterations,
       maxSubSteps: data.maxSubSteps,
       fixedTimeStep: data.fixedTimeStep
     });
-    }
 
     this.initialized = true;
 
@@ -151,8 +87,6 @@ module.exports = AFRAME.registerSystem('physics', {
 
       this.countBodies = {
         "ammo": () => this.countBodiesAmmo(),
-        "local": () => this.countBodiesCannon(false),
-        "worker": () => this.countBodiesCannon(true)
       }
 
       this.bodyTypeToStatsPropertyMap = {
@@ -161,10 +95,6 @@ module.exports = AFRAME.registerSystem('physics', {
           [TYPE.KINEMATIC] : "kinematicBodies",
           [TYPE.DYNAMIC] : "dynamicBodies",
         }, 
-        "cannon": {
-          [CANNON.Body.STATIC] : "staticBodies",
-          [CANNON.Body.DYNAMIC] : "dynamicBodies"
-        }
       }
       
       const scene = this.el.sceneEl;
@@ -189,34 +119,27 @@ module.exports = AFRAME.registerSystem('physics', {
                                            event:physics-body-data;
                                            properties: dynamicBodies;
                                            label: Dynamic`)
-      if (this.data.driver === 'local' || this.data.driver === 'worker') {
-        scene.setAttribute("stats-row__b3", `group: bodies;
-                                             event:physics-body-data;
-                                             properties: contacts;
-                                             label: Contacts`)
-      }
-      else if (this.data.driver === 'ammo') {
-        scene.setAttribute("stats-row__b3", `group: bodies;
+
+      scene.setAttribute("stats-row__b3", `group: bodies;
                                              event:physics-body-data;
                                              properties: kinematicBodies;
                                              label: Kinematic`)
-        scene.setAttribute("stats-row__b4", `group: bodies;
+      scene.setAttribute("stats-row__b4", `group: bodies;
                                              event: physics-body-data;
                                              properties: manifolds;
                                              label: Manifolds`)
-        scene.setAttribute("stats-row__b5", `group: bodies;
+      scene.setAttribute("stats-row__b5", `group: bodies;
                                              event: physics-body-data;
                                              properties: manifoldContacts;
                                              label: Contacts`)
-        scene.setAttribute("stats-row__b6", `group: bodies;
+      scene.setAttribute("stats-row__b6", `group: bodies;
                                              event: physics-body-data;
                                              properties: collisions;
                                              label: Collisions`)
-        scene.setAttribute("stats-row__b7", `group: bodies;
+      scene.setAttribute("stats-row__b7", `group: bodies;
                                              event: physics-body-data;
                                              properties: collisionKeys;
                                              label: Coll Keys`)
-      }
 
       scene.setAttribute("stats-group__tick", `label: Physics Ticks: Median${space}90th%${space}99th%`)
       scene.setAttribute("stats-row__1", `group: tick;
@@ -333,21 +256,6 @@ module.exports = AFRAME.registerSystem('physics', {
     })
   },
 
-  countBodiesCannon(worker) {
-
-    const statsData = this.statsBodyData
-    statsData.contacts = worker ? this.driver.contacts.length : this.driver.world.contacts.length;
-    statsData.staticBodies = 0
-    statsData.dynamicBodies = 0
-
-    const bodies = worker ? Object.values(this.driver.bodies)  : this.driver.world.bodies
-
-    bodies.forEach((body) => {
-      const property = this.bodyTypeToStatsPropertyMap["cannon"][body.type]
-      statsData[property]++
-    })
-  },
-
   setDebug: function(debug) {
     this.debug = debug;
     if (this.data.driver === 'ammo' && this.initialized) {
@@ -363,60 +271,26 @@ module.exports = AFRAME.registerSystem('physics', {
 
   /**
    * Adds a body to the scene, and binds proxied methods to the driver.
-   * @param {CANNON.Body} body
    */
   addBody: function (body, group, mask) {
     var driver = this.driver;
-
-    if (this.data.driver === 'local') {
-      body.__applyImpulse = body.applyImpulse;
-      body.applyImpulse = function () {
-        driver.applyBodyMethod(body, 'applyImpulse', arguments);
-      };
-
-      body.__applyForce = body.applyForce;
-      body.applyForce = function () {
-        driver.applyBodyMethod(body, 'applyForce', arguments);
-      };
-
-      body.updateProperties = function () {
-        driver.updateBodyProperties(body);
-      };
-
-      this.listeners[body.id] = function (e) { body.el.emit('collide', e); };
-      body.addEventListener('collide', this.listeners[body.id]);
-    }
 
     this.driver.addBody(body, group, mask);
   },
 
   /**
    * Removes a body and its proxied methods.
-   * @param {CANNON.Body} body
    */
   removeBody: function (body) {
     this.driver.removeBody(body);
-
-    if (this.data.driver === 'local' || this.data.driver === 'worker') {
-      body.removeEventListener('collide', this.listeners[body.id]);
-      delete this.listeners[body.id];
-
-      body.applyImpulse = body.__applyImpulse;
-      delete body.__applyImpulse;
-
-      body.applyForce = body.__applyForce;
-      delete body.__applyForce;
-
-      delete body.updateProperties;
-    }
   },
 
-  /** @param {CANNON.Constraint or Ammo.btTypedConstraint} constraint */
+  /** @param {Ammo.btTypedConstraint} constraint */
   addConstraint: function (constraint) {
     this.driver.addConstraint(constraint);
   },
 
-  /** @param {CANNON.Constraint or Ammo.btTypedConstraint} constraint */
+  /** @param {Ammo.btTypedConstraint} constraint */
   removeConstraint: function (constraint) {
     this.driver.removeConstraint(constraint);
   },

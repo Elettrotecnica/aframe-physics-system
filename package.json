@@ -1,7 +1,7 @@
 {
-  "name": "@c-frame/aframe-physics-system",
+  "name": "@Elettrotecnica/aframe-physics-system",
   "version": "4.2.2",
-  "description": "Physics system for A-Frame VR, built on Cannon.js & Ammo.js",
+  "description": "Physics system for A-Frame VR, built on Ammo.js",
   "main": "index.js",
   "scripts": {
     "dev": "npx webpack serve",
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/c-frame/aframe-physics-system.git"
+    "url": "git+https://github.com/Elettrotecnica/aframe-physics-system.git"
   },
   "keywords": [
     "aframe",
@@ -29,22 +29,19 @@
     "vr",
     "three",
     "physics",
-    "cannon",
     "webgl",
     "webvr"
   ],
   "author": "Don McCurdy <dm@donmccurdy.com> (https://www.donmccurdy.com), n5ro, diarmid mackenzie, c-frame maintainers",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/c-frame/aframe-physics-system/issues"
+    "url": "https://github.com/Elettrotecnica/aframe-physics-system/issues"
   },
   "homepage": "https://c-frame.github.io/aframe-physics-system/",
   "dependencies": {
     "aframe-stats-panel": "^0.2.1",
     "ammo-debug-drawer": "^0.1.0",
-    "cannon-es": "^0.9.1",
     "patch-package": "^6.5.0",
-    "three-to-cannon": "^4.0.0",
     "webpack": "^5.75.0",
     "webpack-dev-server": "^4.11.1",
     "webworkify-webpack": "^2.1.5"
