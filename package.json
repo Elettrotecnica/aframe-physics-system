@@ -44,7 +44,6 @@
     "ammo-debug-drawer": "^0.1.0",
     "cannon-es": "^0.9.1",
     "patch-package": "^6.5.0",
-    "three-to-ammo": "^1.0.1",
     "three-to-cannon": "^4.0.0",
     "webpack": "^5.75.0",
     "webpack-dev-server": "^4.11.1",
@@ -71,6 +70,7 @@
     "sinon": "^2.4.1",
     "sinon-chai": "^2.14.0",
     "three": ">=0.125.0",
+    "three-to-ammo": "github:Elettrotecnica/three-to-ammo",
     "webpack-cli": "^5.0.1",
     "webpack-merge": "^5.9.0"
   },
