@@ -166,7 +166,6 @@ module.exports = AFRAME.registerComponent("ammo-constraint", {
         throw new Error("[constraint] Unexpected type: " + data.type);
     }
 
-    Ammo.destroy(bodyTransform);
     Ammo.destroy(targetTransform);
 
     return constraint;
