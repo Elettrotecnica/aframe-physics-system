@@ -36,13 +36,12 @@ AFRAME.registerComponent('force-pushable', {
     const force = this.force
     const impulseBt = this.impulseBtVector
     const pusher = e.detail.cursorEl.object3D
-    pusher.localToWorld(pusher.position)
-    force.copy(el.object3D.position.sub(pusher.position))
+    force.copy(pusher.position)
+    pusher.localToWorld(force)
+    force.copy(el.object3D.position.sub(force))
     force.normalize();
 
-    // not sure about units, but force seems much stronger with Ammo,
-    // so scaling down by a factor of 10.
-    force.multiplyScalar(this.data.force / 10);
+    force.multiplyScalar(this.data.force);
     impulseBt.setValue(force.x, force.y, force.z)
 
     // use data from intersection to determine point at which to apply impulse.
