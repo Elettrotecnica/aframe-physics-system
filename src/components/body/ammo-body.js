@@ -430,7 +430,7 @@ let AmmoBody = {
         this.msTransform.setRotation(this.rotation);
         this.motionState.setWorldTransform(this.msTransform);
 
-        if (this.data.type === TYPE.STATIC) {
+        if (this.data.type !== TYPE.KINEMATIC) {
           this.body.setCenterOfMassTransform(this.msTransform);
         }
       }
