@@ -46,7 +46,7 @@ let AmmoBody = {
   schema: {
     loadedEvent: { default: "" },
     mass: { default: 1 },
-    gravity: { type: "vec3", default: { x: undefined, y: undefined, z: undefined } },
+    gravity: { type: "vec3", default: null },
     linearDamping: { default: 0.01 },
     angularDamping: { default: 0.01 },
     linearSleepingThreshold: { default: 1.6 },
