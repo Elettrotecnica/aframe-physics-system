@@ -3,7 +3,7 @@
   <head>
     <title>Examples • AMMO</title>
     <meta name="description" content="Hello, WebVR! - A-Frame" />
-    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/MozillaReality/ammo.js@8bbc0ea/builds/ammo.wasm.js"></script>
     <script src="../../dist/aframe-physics-system.js"></script>
     <link rel="stylesheet" href="../styles.css">
@@ -97,7 +97,7 @@
         color="green"
         shadow
         bounce
-        ammo-body="type: kinematic; addCollideEventListener: true; disableCollision: true;"
+        ammo-body="type: kinematic; disableCollision: true;"
         ammo-shape="type: cone;"
         ammo-constraint="target: #target;"
       ></a-cone>
@@ -117,7 +117,7 @@
         scale="0.5 0.5 0.5"
         color="blue"
         shadow
-        ammo-body="addCollideEventListener: false;"
+        ammo-body
         ammo-shape
       ></a-torus-knot>
       <a-cylinder
