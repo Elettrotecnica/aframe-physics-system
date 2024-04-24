@@ -67,7 +67,7 @@
     "sinon": "^2.4.1",
     "sinon-chai": "^2.14.0",
     "three": ">=0.125.0",
-    "three-to-ammo": "github:Elettrotecnica/three-to-ammo",
+    "three-to-ammo": "github:Elettrotecnica/three-to-ammo#elettrotecnica",
     "webpack-cli": "^5.0.1",
     "webpack-merge": "^5.9.0"
   },
