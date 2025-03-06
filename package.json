@@ -1,6 +1,6 @@
 {
   "name": "@Elettrotecnica/aframe-physics-system",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "description": "Physics system for A-Frame VR, built on Ammo.js",
   "main": "index.js",
   "scripts": {
@@ -39,12 +39,11 @@
   },
   "homepage": "https://c-frame.github.io/aframe-physics-system/",
   "dependencies": {
-    "aframe-stats-panel": "^0.2.1",
+    "aframe-stats-panel": "^0.2.3",
     "ammo-debug-drawer": "^0.1.0",
     "patch-package": "^6.5.0",
-    "webpack": "^5.75.0",
-    "webpack-dev-server": "^4.11.1",
-    "webworkify-webpack": "^2.1.5"
+    "three-to-ammo": "npm:@c-frame/three-to-ammo@^1.0.3",
+    "webworkify": "^1.4.0"
   },
   "peerDependencies": {
     "aframe": ">=0.5.0"

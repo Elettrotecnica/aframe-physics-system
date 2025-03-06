@@ -142,13 +142,13 @@ AFRAME.registerComponent('tick-time-display', {
   },
 
   init() {
-      this.updateData = this.updateData.bind(this);
+      this.updateStatsData = this.updateStatsData.bind(this);
 
-      this.el.sceneEl.addEventListener('physics-tick-summary', this.updateData)
+      this.el.sceneEl.addEventListener('physics-tick-summary', this.updateStatsData)
 
   },
 
-  updateData(evt) {
+  updateStatsData(evt) {
 
     if (this.data.outputEl) {
       this.data.outputEl.innerHTML = `Engine: ${evt.detail.engine.percentile__50}<br/>
